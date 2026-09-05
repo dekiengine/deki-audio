@@ -28,7 +28,7 @@ var NAVTREE =
     [ "Components", "index.html#autotoc_md0", null ],
     [ "Feature flags", "index.html#autotoc_md1", null ],
     [ "Component reference", "index.html#autotoc_md2", [
-      [ "MAX98357AudioComponent (MAX98357A Audio)", "index.html#c-max98357audiocomponent", null ]
+      [ "MAX98357AudioComponent", "index.html#c-max98357audiocomponent", null ]
     ] ]
   ] ]
 ];
