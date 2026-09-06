@@ -26,8 +26,7 @@ var NAVTREE =
 [
   [ "deki-audio", "index.html", [
     [ "Components", "index.html#autotoc_md0", null ],
-    [ "Feature flags", "index.html#autotoc_md1", null ],
-    [ "Component reference", "index.html#autotoc_md2", [
+    [ "Component reference", "index.html#autotoc_md1", [
       [ "MAX98357AudioComponent", "index.html#c-max98357audiocomponent", null ]
     ] ]
   ] ]
