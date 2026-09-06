@@ -1,0 +1,19 @@
+{
+  "id": "deki-audio",
+  "displayName": "Audio (Speaker / PCM playback)",
+  "minEngine": "0.10.0",
+  "buildDefine": "DEKI_PACKAGE_AUDIO",
+  "requires": [
+    "deki-i2s"
+  ],
+  "features": [
+    {
+      "id": "max98357",
+      "displayName": "MAX98357A (I²S class-D mono amp, 16-bit PCM)",
+      "buildDefine": "DEKI_FEATURE_AUDIO_MAX98357",
+      "defaultEnabled": true,
+      "componentGuids": []
+    }
+  ],
+  "dependencies": {}
+}
