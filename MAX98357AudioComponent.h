@@ -16,12 +16,12 @@
  * left-channel mono mode. These are hardware straps — the component
  * doesn't drive them.
  */
+DEKI_CATEGORY("Sensors")
+DEKI_DISPLAY_NAME("MAX98357A Audio")
+DEKI_DESCRIPTION("Plays sound through a MAX98357A I2S amplifier.")
 class MAX98357AudioComponent : public Deki::SetupComponent
 {
 public:
-    DEKI_COMPONENT(MAX98357AudioComponent, Deki::SetupComponent, "Sensors", "4d8c9f12-2a7b-4e35-a869-5b1f3e7c4d82", "")
-    DEKI_DISPLAY_NAME("MAX98357A Audio")
-    DEKI_DESCRIPTION("Plays sound through a MAX98357A I2S amplifier.")
 
     DEKI_EXPORT
     DEKI_RANGE(0, 1)
@@ -59,4 +59,3 @@ public:
     const char* GetSetupName() const override { return "MAX98357A Audio"; }
 };
 
-#include "generated/MAX98357AudioComponent.gen.h"
