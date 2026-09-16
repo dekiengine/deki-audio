@@ -34,7 +34,7 @@ DEKI_AUDIO_API int DekiAudio_EnsureRegistered(void)
     return ::DekiAudio_GetAutoComponentCount();
 }
 
-DEKI_PLUGIN_API const char* DekiPlugin_GetName(void)    { return "DekiRendering::Deki Audio Package"; }
+DEKI_PLUGIN_API const char* DekiPlugin_GetName(void)    { return "Deki Audio Package"; }
 DEKI_PLUGIN_API const char* DekiPlugin_GetVersion(void)
 {
 #ifdef DEKI_PACKAGE_VERSION
