@@ -4,6 +4,9 @@
 #include <deki/LogSystem.h>
 #include <string>
 
+namespace DekiAudio
+{
+
 static MAX98357Audio* s_Driver = nullptr;
 
 void MAX98357AudioComponent::Setup(SetupCallback onComplete)
@@ -38,3 +41,5 @@ void MAX98357AudioComponent::Setup(SetupCallback onComplete)
 
     if (onComplete) onComplete(success);
 }
+
+}  // namespace DekiAudio

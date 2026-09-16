@@ -5,6 +5,9 @@
 #include "IDekiI2S.h"  // from deki-i2s
 #include <string>
 
+namespace DekiAudio
+{
+
 /**
  * @brief MAX98357A class-D mono amp driver over I2S.
  *
@@ -38,7 +41,7 @@ public:
     bool  IsHardwareConnected() const override { return m_I2S != nullptr; }
 
 private:
-    IDekiI2S*   m_I2S = nullptr;
+    DekiI2s::IDekiI2S*   m_I2S = nullptr;
     int         m_Port       = 0;
     int         m_PinBCLK    = -1;
     int         m_PinLRCLK   = -1;
@@ -51,3 +54,5 @@ private:
     Deki::PackageState m_State = Deki::PackageState::Uninitialized;
     std::string m_LastError;
 };
+
+}  // namespace DekiAudio

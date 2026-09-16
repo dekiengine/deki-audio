@@ -2,6 +2,9 @@
 
 #include "IDekiAudio.h"
 
+namespace DekiAudio
+{
+
 /**
  * @brief Published-instance registry for the currently active audio driver.
  *
@@ -18,3 +21,5 @@ public:
 private:
     static IDekiAudio* s_Current;
 };
+
+}  // namespace DekiAudio

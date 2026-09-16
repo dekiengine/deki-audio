@@ -6,26 +6,35 @@
 #include <deki/interop/Plugin.h>
 #include <deki/LogSystem.h>
 
-#ifdef DEKI_EDITOR
-
 extern void DekiAudio_RegisterComponents();
 extern int  DekiAudio_GetAutoComponentCount();
 extern const Deki::ComponentMeta* DekiAudio_GetAutoComponentMeta(int index);
 
+namespace DekiAudio
+{
+
+#ifdef DEKI_EDITOR
+
+
 static bool s_AudioRegistered = false;
+
+
+// The exports below are C symbols at global scope; the package's own
+// registration helpers and statics live in its namespace.
+using namespace DekiAudio;
 
 extern "C" {
 
 DEKI_AUDIO_API int DekiAudio_EnsureRegistered(void)
 {
     if (s_AudioRegistered)
-        return DekiAudio_GetAutoComponentCount();
+        return ::DekiAudio_GetAutoComponentCount();
     s_AudioRegistered = true;
-    DekiAudio_RegisterComponents();
-    return DekiAudio_GetAutoComponentCount();
+    ::DekiAudio_RegisterComponents();
+    return ::DekiAudio_GetAutoComponentCount();
 }
 
-DEKI_PLUGIN_API const char* DekiPlugin_GetName(void)    { return "Deki Audio Package"; }
+DEKI_PLUGIN_API const char* DekiPlugin_GetName(void)    { return "DekiRendering::Deki Audio Package"; }
 DEKI_PLUGIN_API const char* DekiPlugin_GetVersion(void)
 {
 #ifdef DEKI_PACKAGE_VERSION
@@ -36,18 +45,20 @@ DEKI_PLUGIN_API const char* DekiPlugin_GetVersion(void)
 }
 DEKI_PLUGIN_API int  DekiPlugin_Init(void)             { DEKI_LOG_INFO("[deki-audio] DekiPlugin_Init"); return 0; }
 DEKI_PLUGIN_API void DekiPlugin_Shutdown(void)         { s_AudioRegistered = false; }
-DEKI_PLUGIN_API int  DekiPlugin_GetComponentCount(void){ return DekiAudio_GetAutoComponentCount(); }
+DEKI_PLUGIN_API int  DekiPlugin_GetComponentCount(void){ return ::DekiAudio_GetAutoComponentCount(); }
 DEKI_PLUGIN_API const Deki::ComponentMeta* DekiPlugin_GetComponentMeta(int index)
 {
-    return DekiAudio_GetAutoComponentMeta(index);
+    return ::DekiAudio_GetAutoComponentMeta(index);
 }
 DEKI_PLUGIN_API void DekiPlugin_RegisterComponents(void)
 {
     int n = DekiAudio_EnsureRegistered();
-    DEKI_LOG_INFO("[deki-audio] DekiPlugin_RegisterComponents -> %d component(s)", n);
+    DEKI_LOG_INFO("[deki-audio] ::DekiPlugin_RegisterComponents -> %d component(s)", n);
 }
 
 
 } // extern "C"
 
 #endif // DEKI_EDITOR
+}  // namespace DekiAudio
+

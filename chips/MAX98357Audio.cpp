@@ -3,6 +3,9 @@
 #include <deki/LogSystem.h>
 #include <vector>
 
+namespace DekiAudio
+{
+
 MAX98357Audio::~MAX98357Audio()
 {
     Shutdown();
@@ -23,7 +26,7 @@ void MAX98357Audio::Configure(const Deki::PackageConfig& config)
 
 bool MAX98357Audio::Initialize()
 {
-    m_I2S = DekiI2S::Create();
+    m_I2S = DekiI2s::DekiI2S::Create();
     if (!m_I2S)
     {
         m_LastError = "MAX98357Audio: no I2S factory registered (platform integration missing)";
@@ -121,3 +124,5 @@ void MAX98357Audio::Stop()
     if (m_I2S) m_I2S->Stop();
     m_Playing = false;
 }
+
+}  // namespace DekiAudio

@@ -1,5 +1,8 @@
 #include "DekiAudio.h"
 
+namespace DekiAudio
+{
+
 IDekiAudio* DekiAudio::s_Current = nullptr;
 
 void DekiAudio::SetCurrent(IDekiAudio* audio)
@@ -11,3 +14,5 @@ IDekiAudio* DekiAudio::GetCurrent()
 {
     return s_Current;
 }
+
+}  // namespace DekiAudio

@@ -4,6 +4,9 @@
 #include <cstdint>
 #include <cstddef>
 
+namespace DekiAudio
+{
+
 /**
  * @brief Audio output interface.
  *
@@ -40,3 +43,5 @@ public:
 
     virtual bool IsHardwareConnected() const = 0;
 };
+
+}  // namespace DekiAudio

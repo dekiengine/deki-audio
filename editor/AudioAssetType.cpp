@@ -15,6 +15,9 @@
 #include <deki-editor/EditorRegistry.h>
 #include <deki-editor/AssetTypeRegistry.h>
 
+// Editor extensions live in DekiEditor; the package's own types are in DekiAudio.
+using namespace DekiAudio;
+
 namespace DekiEditor
 {
 
