@@ -44,6 +44,7 @@ public:
     int32_t dinPin = 5;
 
     DEKI_EXPORT
+    DEKI_UNIT(Frequency)
     DEKI_RANGE(8000, 48000)
     int32_t sampleRate = 16000;
 
