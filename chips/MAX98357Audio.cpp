@@ -1,7 +1,6 @@
 #include "MAX98357Audio.h"
 #include "DekiI2S.h"  // from deki-i2s
 #include <deki/LogSystem.h>
-#include <vector>
 
 namespace DekiAudio
 {
@@ -26,6 +25,9 @@ void MAX98357Audio::Configure(const Deki::PackageConfig& config)
 
 bool MAX98357Audio::Initialize()
 {
+    // A second Initialize used to overwrite m_I2S and leak the open channel.
+    Shutdown();
+
     m_I2S = DekiI2s::DekiI2S::Create();
     if (!m_I2S)
     {
@@ -58,6 +60,9 @@ bool MAX98357Audio::Initialize()
     if (!m_I2S->Start())
     {
         m_LastError = std::string("MAX98357Audio: I2S start failed: ") + m_I2S->GetLastError();
+        m_I2S->Shutdown();
+        delete m_I2S;
+        m_I2S = nullptr;
         m_State = Deki::PackageState::Error;
         return false;
     }
@@ -91,29 +96,44 @@ bool MAX98357Audio::PlayPCM(const int16_t* samples, size_t count, int sampleRate
     if (!m_I2S || !samples || count == 0) return false;
     (void)sampleRate; // Rate is set at Configure time; resampling is the caller's job for now.
 
-    std::vector<int16_t> scaled(count);
-    const float vol = m_Volume;
-    for (size_t i = 0; i < count; ++i)
+    // Stop() disables the channel; without this every later write failed and
+    // the speaker stayed silent until a restart.
+    if (!m_I2S->Start())
     {
-        int32_t s = (int32_t)((float)samples[i] * vol);
-        if (s >  32767) s =  32767;
-        if (s < -32768) s = -32768;
-        scaled[i] = (int16_t)s;
+        m_LastError = std::string("MAX98357Audio: I2S start failed: ") + m_I2S->GetLastError();
+        return false;
     }
 
+    // Scaled a chunk at a time on the stack. A copy of the whole clip went to
+    // internal RAM, so a long one ran the board out of memory.
+    int16_t scaled[256];
+    const float vol = m_Volume;
     m_Playing = true;
-    const uint8_t* ptr = reinterpret_cast<const uint8_t*>(scaled.data());
-    size_t remaining = count * sizeof(int16_t);
-    while (remaining > 0)
+    for (size_t done = 0; done < count;)
     {
-        int w = m_I2S->Write(ptr, remaining, 1000);
-        if (w <= 0)
+        const size_t n = (count - done < 256) ? count - done : 256;
+        for (size_t i = 0; i < n; ++i)
         {
-            m_Playing = false;
-            return false;
+            int32_t s = (int32_t)((float)samples[done + i] * vol);
+            if (s >  32767) s =  32767;
+            if (s < -32768) s = -32768;
+            scaled[i] = (int16_t)s;
         }
-        ptr += w;
-        remaining -= (size_t)w;
+
+        const uint8_t* ptr = reinterpret_cast<const uint8_t*>(scaled);
+        size_t remaining = n * sizeof(int16_t);
+        while (remaining > 0)
+        {
+            int w = m_I2S->Write(ptr, remaining, 1000);
+            if (w <= 0)
+            {
+                m_Playing = false;
+                return false;
+            }
+            ptr += w;
+            remaining -= (size_t)w;
+        }
+        done += n;
     }
     m_Playing = false;
     return true;

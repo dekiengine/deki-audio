@@ -8,6 +8,17 @@ breaking change bumps the minor across the editor, the engine and every
 package together, so a package with no changes of its own is still released
 alongside one that has them.
 
+## Unreleased
+
+### Fixed
+- MAX98357A: after `Stop()` the speaker stayed silent until a restart, because
+  playing never turned the I2S channel back on. `PlayPCM` now does.
+- MAX98357A: `PlayPCM` copied the whole clip into internal RAM to apply the
+  volume, so a long clip ran the board out of memory. It now scales a small
+  chunk at a time.
+- MAX98357A: initializing twice leaked the first I2S channel, and a channel
+  that failed to start was left open.
+
 ## 0.17.0
 
 ### Changed
