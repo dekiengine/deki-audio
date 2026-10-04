@@ -8,17 +8,14 @@
 namespace DekiAudio
 {
 
-/**
- * @brief Boot-scene component for the MAX98357A I2S class-D mono amplifier.
- *
- * Streams 16-bit signed PCM to an external I2S DAC/amp. Requires the
- * deki-esp32-integration package (registers the I2S backend factory) on
- * ESP32 targets.
- *
- * Wire MAX98357A GAIN pin to GND for +9 dB (loudest), SD pin to VDD for
- * left-channel mono mode. These are hardware straps — the component
- * doesn't drive them.
- */
+/// Boot-scene component for the MAX98357A I2S class-D mono amplifier.
+///
+/// Streams 16-bit signed PCM to the amp. On ESP32 targets it needs the
+/// deki-esp32-integration package, which registers the I2S backend.
+///
+/// Wire the GAIN pin to GND for +9 dB (loudest) and SD to VDD for
+/// left-channel mono. These are hardware straps; the component does not
+/// drive them.
 DEKI_CATEGORY("Sensors")
 DEKI_DISPLAY_NAME("MAX98357A Audio")
 DEKI_DESCRIPTION("Plays sound through a MAX98357A I2S amplifier.")
@@ -60,7 +57,7 @@ public:
     DEKI_RANGE(1, 2)
     int32_t channels = 1;
 
-    /** @brief Software playback volume, 0..100 percent. Hardware gain is fixed on the amp. */
+    /// Software playback volume, 0..100 percent. The amp's hardware gain is fixed.
     DEKI_EXPORT
     DEKI_TOOLTIP("Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet "
                  "rather than at full output.")

@@ -25,7 +25,7 @@ void MAX98357Audio::Configure(const Deki::PackageConfig& config)
 
 bool MAX98357Audio::Initialize()
 {
-    // A second Initialize used to overwrite m_I2S and leak the open channel.
+    // Closes any open channel, so a second Initialize does not leak it.
     Shutdown();
 
     m_I2S = DekiI2s::DekiI2S::Create();
@@ -105,16 +105,16 @@ bool MAX98357Audio::PlayPCM(const int16_t* samples, size_t count, int sampleRate
     }
     (void)sampleRate;  // Rate is set at Configure time; resampling is the caller's job for now.
 
-    // Stop() disables the channel; without this every later write failed and
-    // the speaker stayed silent until a restart.
+    // Stop() disables the channel, and writes to a disabled channel fail, so
+    // start it again before each clip.
     if (!m_I2S->Start())
     {
         m_LastError = std::string("MAX98357Audio: I2S start failed: ") + m_I2S->GetLastError();
         return false;
     }
 
-    // Scaled a chunk at a time on the stack. A copy of the whole clip went to
-    // internal RAM, so a long one ran the board out of memory.
+    // Scaled a chunk at a time on the stack: a copy of a whole long clip in
+    // internal RAM runs the board out of memory.
     int16_t scaled[256];
     const float vol = m_Volume;
     m_Playing = true;

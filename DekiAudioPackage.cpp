@@ -1,7 +1,4 @@
-/**
- * @file DekiAudioPackage.cpp
- * @brief Package entry point for deki-audio
- */
+// Package entry point for deki-audio.
 #include "DekiAudioPackage.h"
 #include <deki/interop/Plugin.h>
 #include <deki/LogSystem.h>

@@ -5,13 +5,9 @@
 namespace DekiAudio
 {
 
-/**
- * @brief Published-instance registry for the currently active audio driver.
- *
- * Chip-specific SetupComponents (e.g., MAX98357AudioComponent) call
- * SetCurrent() in their Setup() once the driver is configured and
- * initialized. Game code reads the current audio output via GetCurrent().
- */
+/// Holds the active audio driver. A chip's SetupComponent (such as
+/// MAX98357AudioComponent) calls SetCurrent() in its Setup() once the driver
+/// is configured and running; game code gets it from GetCurrent().
 class DekiAudio
 {
 public:

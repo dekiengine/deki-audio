@@ -8,16 +8,13 @@
 namespace DekiAudio
 {
 
-/**
- * @brief MAX98357A class-D mono amp driver over I2S.
- *
- * The MAX98357A has no digital volume control — hardware gain is fixed
- * via its GAIN pin resistor. Volume is applied in software by scaling
- * samples before handing them to the I2S peripheral.
- *
- * SD pin on the amp should be tied to VDD for left-channel mono mode
- * (the component doesn't drive it — it's a hardware strap).
- */
+/// Driver for the MAX98357A class-D mono amp over I2S.
+///
+/// The amp's gain is set in hardware by its GAIN pin resistor, so volume is
+/// applied in software by scaling samples before they go to I2S.
+///
+/// Tie the amp's SD pin to VDD for left-channel mono. It is a hardware
+/// strap; the driver does not drive it.
 class MAX98357Audio : public IDekiAudio
 {
 public:

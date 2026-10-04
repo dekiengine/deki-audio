@@ -1,13 +1,8 @@
-/**
- * @file AudioAssetType.cpp
- * @brief AssetTypeRegistry binding for audio source files (.wav/.mp3/.ogg).
- *
- * Pure type-name → extension mapping, mirroring deki-2d / deki-tilemap. There
- * is no audio compile pipeline yet — these files are discovered and classified
- * as "Audio" assets, but no consumer in the current editor actually processes
- * them. Adding this registration so file discovery (AssetPipeline::IsAssetFile)
- * doesn't drop them when the engine no longer hardcodes extensions.
- */
+// Registers audio source files (.wav/.mp3/.ogg) with AssetTypeRegistry: a
+// type name and its extensions, as deki-2d and deki-tilemap do. Nothing
+// compiles audio yet; the registration makes file discovery
+// (AssetPipeline::IsAssetFile) list these files as "Audio" assets, since the
+// engine knows no extensions of its own.
 
 #ifdef DEKI_EDITOR
 
