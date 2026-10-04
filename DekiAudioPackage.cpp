@@ -6,9 +6,9 @@
 #include <deki/interop/Plugin.h>
 #include <deki/LogSystem.h>
 
-extern void DekiAudio_RegisterComponents();
-extern int DekiAudio_GetAutoComponentCount();
-extern const Deki::ComponentMeta* DekiAudio_GetAutoComponentMeta(int index);
+extern void DekiAudioRegisterComponents();
+extern int DekiAudioGetAutoComponentCount();
+extern const Deki::ComponentMeta* DekiAudioGetAutoComponentMeta(int index);
 
 namespace DekiAudio
 {
@@ -23,22 +23,22 @@ using namespace DekiAudio;
 
 extern "C"
 {
-    DEKI_AUDIO_API int DekiAudio_EnsureRegistered(void)
+    DEKI_AUDIO_API int DekiAudioEnsureRegistered(void)
     {
         if (s_AudioRegistered)
         {
-            return ::DekiAudio_GetAutoComponentCount();
+            return ::DekiAudioGetAutoComponentCount();
         }
         s_AudioRegistered = true;
-        ::DekiAudio_RegisterComponents();
-        return ::DekiAudio_GetAutoComponentCount();
+        ::DekiAudioRegisterComponents();
+        return ::DekiAudioGetAutoComponentCount();
     }
 
-    DEKI_PLUGIN_API const char* DekiPlugin_GetName(void)
+    DEKI_PLUGIN_API const char* DekiPluginGetName(void)
     {
         return "Deki Audio Package";
     }
-    DEKI_PLUGIN_API const char* DekiPlugin_GetVersion(void)
+    DEKI_PLUGIN_API const char* DekiPluginGetVersion(void)
     {
 #ifdef DEKI_PACKAGE_VERSION
         return DEKI_PACKAGE_VERSION;
@@ -46,25 +46,25 @@ extern "C"
         return "0.0.0-dev";
 #endif
     }
-    DEKI_PLUGIN_API int DekiPlugin_Init(void)
+    DEKI_PLUGIN_API int DekiPluginInit(void)
     {
         return 0;
     }
-    DEKI_PLUGIN_API void DekiPlugin_Shutdown(void)
+    DEKI_PLUGIN_API void DekiPluginShutdown(void)
     {
         s_AudioRegistered = false;
     }
-    DEKI_PLUGIN_API int DekiPlugin_GetComponentCount(void)
+    DEKI_PLUGIN_API int DekiPluginGetComponentCount(void)
     {
-        return ::DekiAudio_GetAutoComponentCount();
+        return ::DekiAudioGetAutoComponentCount();
     }
-    DEKI_PLUGIN_API const Deki::ComponentMeta* DekiPlugin_GetComponentMeta(int index)
+    DEKI_PLUGIN_API const Deki::ComponentMeta* DekiPluginGetComponentMeta(int index)
     {
-        return ::DekiAudio_GetAutoComponentMeta(index);
+        return ::DekiAudioGetAutoComponentMeta(index);
     }
-    DEKI_PLUGIN_API void DekiPlugin_RegisterComponents(void)
+    DEKI_PLUGIN_API void DekiPluginRegisterComponents(void)
     {
-        DekiAudio_EnsureRegistered();
+        DekiAudioEnsureRegistered();
     }
 
 }  // extern "C"

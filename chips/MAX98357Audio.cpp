@@ -19,8 +19,8 @@ void MAX98357Audio::Configure(const Deki::PackageConfig& config)
     m_SampleRate = config.GetInt("sampleRate", 16000);
     m_Channels = config.GetInt("channels", 1);
 
-    const int vol_pct = config.GetInt("initialVolume", 80);
-    m_Volume = (vol_pct < 0) ? 0.0f : (vol_pct > 100 ? 1.0f : (float)vol_pct * 0.01f);
+    const int volPct = config.GetInt("initialVolume", 80);
+    m_Volume = (volPct < 0) ? 0.0f : (volPct > 100 ? 1.0f : (float)volPct * 0.01f);
 }
 
 bool MAX98357Audio::Initialize()
