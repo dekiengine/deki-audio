@@ -24,29 +24,29 @@ namespace DekiEditor
 class AudioAssetType : public AssetTypeEditor
 {
 public:
-    const char* GetTypeName() const override    { return "Audio"; }
+    const char* GetTypeName() const override { return "Audio"; }
     const char* GetDisplayName() const override { return "Audio"; }
-    std::vector<std::string> GetExtensions() const override
-    {
-        return { ".wav", ".mp3", ".ogg" };
-    }
+    std::vector<std::string> GetExtensions() const override { return { ".wav", ".mp3", ".ogg" }; }
 };
 
 REGISTER_EDITOR(AudioAssetType)
 
-namespace {
+namespace
+{
 struct AudioCategoryRegistrar
 {
     AudioCategoryRegistrar()
     {
         auto& reg = AssetTypeRegistry::Instance();
-        for (const char* ext : {".wav", ".mp3", ".ogg"})
+        for (const char* ext : { ".wav", ".mp3", ".ogg" })
+        {
             reg.RegisterCategory(ext, AssetCategory::Audio);
+        }
     }
 };
 static AudioCategoryRegistrar s_AudioCategoryRegistrar;
-}
+}  // namespace
 
-} // namespace DekiEditor
+}  // namespace DekiEditor
 
-#endif // DEKI_EDITOR
+#endif  // DEKI_EDITOR

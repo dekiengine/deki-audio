@@ -12,12 +12,12 @@ MAX98357Audio::~MAX98357Audio()
 
 void MAX98357Audio::Configure(const Deki::PackageConfig& config)
 {
-    m_Port       = config.GetInt("i2sPort", 0);
-    m_PinBCLK    = config.GetPin("BCLK", -1);
-    m_PinLRCLK   = config.GetPin("LRCLK", -1);
-    m_PinDOUT    = config.GetPin("DOUT", -1);
+    m_Port = config.GetInt("i2sPort", 0);
+    m_PinBCLK = config.GetPin("BCLK", -1);
+    m_PinLRCLK = config.GetPin("LRCLK", -1);
+    m_PinDOUT = config.GetPin("DOUT", -1);
     m_SampleRate = config.GetInt("sampleRate", 16000);
-    m_Channels   = config.GetInt("channels", 1);
+    m_Channels = config.GetInt("channels", 1);
 
     const int vol_pct = config.GetInt("initialVolume", 80);
     m_Volume = (vol_pct < 0) ? 0.0f : (vol_pct > 100 ? 1.0f : (float)vol_pct * 0.01f);
@@ -38,14 +38,14 @@ bool MAX98357Audio::Initialize()
 
     Deki::PackageConfig cfg;
     cfg.packageId = "i2s";
-    cfg.enabled  = true;
-    cfg.pins["BCLK"]  = m_PinBCLK;
+    cfg.enabled = true;
+    cfg.pins["BCLK"] = m_PinBCLK;
     cfg.pins["LRCLK"] = m_PinLRCLK;
-    cfg.pins["DOUT"]  = m_PinDOUT;
-    cfg.settings["i2sPort"]        = std::to_string(m_Port);
-    cfg.settings["sampleRate"]     = std::to_string(m_SampleRate);
+    cfg.pins["DOUT"] = m_PinDOUT;
+    cfg.settings["i2sPort"] = std::to_string(m_Port);
+    cfg.settings["sampleRate"] = std::to_string(m_SampleRate);
     cfg.settings["bits_per_sample"] = "16";
-    cfg.settings["channels"]        = std::to_string(m_Channels);
+    cfg.settings["channels"] = std::to_string(m_Channels);
 
     m_I2S->Configure(cfg);
     if (!m_I2S->Initialize())
@@ -86,15 +86,24 @@ void MAX98357Audio::Shutdown()
 
 void MAX98357Audio::SetVolume(float volume)
 {
-    if (volume < 0.0f) volume = 0.0f;
-    if (volume > 1.0f) volume = 1.0f;
+    if (volume < 0.0f)
+    {
+        volume = 0.0f;
+    }
+    if (volume > 1.0f)
+    {
+        volume = 1.0f;
+    }
     m_Volume = volume;
 }
 
 bool MAX98357Audio::PlayPCM(const int16_t* samples, size_t count, int sampleRate)
 {
-    if (!m_I2S || !samples || count == 0) return false;
-    (void)sampleRate; // Rate is set at Configure time; resampling is the caller's job for now.
+    if (!m_I2S || !samples || count == 0)
+    {
+        return false;
+    }
+    (void)sampleRate;  // Rate is set at Configure time; resampling is the caller's job for now.
 
     // Stop() disables the channel; without this every later write failed and
     // the speaker stayed silent until a restart.
@@ -115,8 +124,14 @@ bool MAX98357Audio::PlayPCM(const int16_t* samples, size_t count, int sampleRate
         for (size_t i = 0; i < n; ++i)
         {
             int32_t s = (int32_t)((float)samples[done + i] * vol);
-            if (s >  32767) s =  32767;
-            if (s < -32768) s = -32768;
+            if (s > 32767)
+            {
+                s = 32767;
+            }
+            if (s < -32768)
+            {
+                s = -32768;
+            }
             scaled[i] = (int16_t)s;
         }
 
@@ -141,7 +156,10 @@ bool MAX98357Audio::PlayPCM(const int16_t* samples, size_t count, int sampleRate
 
 void MAX98357Audio::Stop()
 {
-    if (m_I2S) m_I2S->Stop();
+    if (m_I2S)
+    {
+        m_I2S->Stop();
+    }
     m_Playing = false;
 }
 

@@ -38,7 +38,7 @@ public:
     virtual bool IsPlaying() const = 0;
 
     /** @brief Software sample scale factor, 0..1. Hardware gain stays fixed. */
-    virtual void  SetVolume(float volume) = 0;
+    virtual void SetVolume(float volume) = 0;
     virtual float GetVolume() const = 0;
 
     virtual bool IsHardwareConnected() const = 0;

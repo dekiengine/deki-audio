@@ -15,7 +15,7 @@ namespace DekiAudio
 class DekiAudio
 {
 public:
-    static void        SetCurrent(IDekiAudio* audio);
+    static void SetCurrent(IDekiAudio* audio);
     static IDekiAudio* GetCurrent();
 
 private:
