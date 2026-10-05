@@ -23,6 +23,10 @@ alongside one that has them.
 - MAX98357A: initializing twice leaked the first I2S channel, and a channel
   that failed to start was left open.
 
+### Removed
+- The former names from before 0.16.0 (bare class names, and deki-gpio's
+  `DekiEsp32::ESP32PinSetup`). A scene that old is upgraded with 0.17 first.
+
 ## 0.17.0
 
 ### Changed

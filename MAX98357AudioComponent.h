@@ -19,7 +19,6 @@ namespace DekiAudio
 DEKI_CATEGORY("Sensors")
 DEKI_DISPLAY_NAME("MAX98357A Audio")
 DEKI_DESCRIPTION("Plays sound through a MAX98357A I2S amplifier.")
-DEKI_FORMER_NAME("MAX98357AudioComponent")
 class MAX98357AudioComponent : public Deki::SetupComponent
 {
 public:
