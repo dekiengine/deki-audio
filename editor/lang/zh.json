@@ -16,5 +16,6 @@
     "Initial Volume": "初始音量",
     "Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet rather than at full output.": "启动时的音量，范围 0 到 100。在第一个声音播放前生效，因此项目可以以较小音量启动，而不是满音量输出。",
     "Plays sound through a MAX98357A I2S amplifier.": "通过 MAX98357A I2S 功放播放声音。",
-    "Sensors": "传感器"
+    "Sensors": "传感器",
+    "MAX98357A Audio": "MAX98357A 音频"
 }

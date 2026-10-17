@@ -16,5 +16,6 @@
     "Initial Volume": "초기 볼륨",
     "Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet rather than at full output.": "시작 시 볼륨(0~100)입니다. 첫 소리가 재생되기 전에 적용되므로, 프로젝트가 최대 출력이 아닌 작은 소리로 시작할 수 있습니다.",
     "Plays sound through a MAX98357A I2S amplifier.": "MAX98357A I2S 앰프로 소리를 재생합니다.",
-    "Sensors": "센서"
+    "Sensors": "센서",
+    "MAX98357A Audio": "MAX98357A 오디오"
 }

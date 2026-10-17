@@ -16,5 +16,6 @@
     "Initial Volume": "初期音量",
     "Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet rather than at full output.": "起動時の音量 (0 から 100) です。最初の音が鳴る前に適用されるので、最大音量ではなく小さな音で始めることができます。",
     "Plays sound through a MAX98357A I2S amplifier.": "MAX98357A I2S アンプで音を再生します。",
-    "Sensors": "センサー"
+    "Sensors": "センサー",
+    "MAX98357A Audio": "MAX98357A オーディオ"
 }
