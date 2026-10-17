@@ -9,6 +9,7 @@
 #include <deki-editor/EditorExtension.h>
 #include <deki-editor/EditorRegistry.h>
 #include <deki-editor/AssetTypeRegistry.h>
+#include <deki-editor/Localization.h>
 
 // Editor extensions live in DekiEditor; the package's own types are in DekiAudio.
 using namespace DekiAudio;
@@ -20,7 +21,7 @@ class AudioAssetType : public AssetTypeEditor
 {
 public:
     const char* GetTypeName() const override { return "Audio"; }
-    const char* GetDisplayName() const override { return "Audio"; }
+    const char* GetDisplayName() const override { return TrMark("Audio"); }
     std::vector<std::string> GetExtensions() const override { return { ".wav", ".mp3", ".ogg" }; }
 };
 

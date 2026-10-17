@@ -1,0 +1,18 @@
+{
+    "Audio": "オーディオ",
+    "MAX98357 Audio Component": "MAX98357 オーディオコンポーネント",
+    "I 2s Port": "I2S ポート",
+    "Which of the chip's I2S controllers drives the amplifier. Most boards only use one.": "チップのどの I2S コントローラーでアンプを駆動するかです。ほとんどのボードは 1 つしか使いません。",
+    "Bclk Pin": "BCLK ピン",
+    "GPIO carrying the bit clock (BCLK), which ticks once per audio bit.": "ビットクロック (BCLK) を送る GPIO です。オーディオの 1 ビットごとに 1 回刻みます。",
+    "Lrclk Pin": "LRCLK ピン",
+    "GPIO carrying the word select line (LRCLK or WS), which marks left and right samples. Some boards label it LRC.": "ワードセレクト線 (LRCLK または WS) を送る GPIO で、左右のサンプルを区別します。LRC と表記しているボードもあります。",
+    "Din Pin": "DIN ピン",
+    "GPIO carrying the audio data into the amplifier (DIN). This is the one sound actually travels on.": "アンプへオーディオデータを送る GPIO (DIN) です。実際に音が流れるのはこの線です。",
+    "Sample Rate": "サンプルレート",
+    "Samples per second. 16 kHz is plenty for speech and effects and cheap on memory; 44100 is CD rate and costs nearly three times the bandwidth.": "1 秒あたりのサンプル数です。16 kHz は音声や効果音には十分で、メモリも少なく済みます。44100 は CD と同じレートで、帯域はおよそ 3 倍かかります。",
+    "Channels": "チャンネル数",
+    "1 for mono, 2 for stereo. The MAX98357 is a mono amplifier, so stereo material is mixed down unless a second one is wired for the other channel.": "1 はモノラル、2 はステレオです。MAX98357 はモノラルのアンプなので、もう一方のチャンネル用に 2 つ目をつながない限り、ステレオの音はモノラルにまとめられます。",
+    "Initial Volume": "初期音量",
+    "Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet rather than at full output.": "起動時の音量 (0 から 100) です。最初の音が鳴る前に適用されるので、最大音量ではなく小さな音で始めることができます。"
+}
