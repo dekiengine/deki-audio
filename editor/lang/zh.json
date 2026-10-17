@@ -1,0 +1,18 @@
+{
+    "Audio": "音频",
+    "MAX98357 Audio Component": "MAX98357 音频组件",
+    "I 2s Port": "I2S 端口",
+    "Which of the chip's I2S controllers drives the amplifier. Most boards only use one.": "由芯片的哪个 I2S 控制器驱动功放。大多数开发板只用一个。",
+    "Bclk Pin": "BCLK 引脚",
+    "GPIO carrying the bit clock (BCLK), which ticks once per audio bit.": "传输位时钟（BCLK）的 GPIO，每个音频位跳变一次。",
+    "Lrclk Pin": "LRCLK 引脚",
+    "GPIO carrying the word select line (LRCLK or WS), which marks left and right samples. Some boards label it LRC.": "传输字选择线（LRCLK 或 WS）的 GPIO，用于区分左右声道的采样。有些开发板标为 LRC。",
+    "Din Pin": "DIN 引脚",
+    "GPIO carrying the audio data into the amplifier (DIN). This is the one sound actually travels on.": "向功放传输音频数据的 GPIO（DIN）。声音实际就是通过这条线传输的。",
+    "Sample Rate": "采样率",
+    "Samples per second. 16 kHz is plenty for speech and effects and cheap on memory; 44100 is CD rate and costs nearly three times the bandwidth.": "每秒的采样数。16 kHz 对语音和音效已经足够，占用内存也少；44100 是 CD 采样率，带宽开销接近三倍。",
+    "Channels": "声道数",
+    "1 for mono, 2 for stereo. The MAX98357 is a mono amplifier, so stereo material is mixed down unless a second one is wired for the other channel.": "1 为单声道，2 为立体声。MAX98357 是单声道功放，因此除非为另一个声道再接一片，否则立体声素材会被混合为单声道。",
+    "Initial Volume": "初始音量",
+    "Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet rather than at full output.": "启动时的音量，范围 0 到 100。在第一个声音播放前生效，因此项目可以以较小音量启动，而不是满音量输出。"
+}

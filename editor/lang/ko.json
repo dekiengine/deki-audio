@@ -1,0 +1,18 @@
+{
+    "Audio": "오디오",
+    "MAX98357 Audio Component": "MAX98357 오디오 컴포넌트",
+    "I 2s Port": "I2S 포트",
+    "Which of the chip's I2S controllers drives the amplifier. Most boards only use one.": "칩의 I2S 컨트롤러 중 어느 것이 앰프를 구동하는지 지정합니다. 대부분의 보드는 하나만 사용합니다.",
+    "Bclk Pin": "BCLK 핀",
+    "GPIO carrying the bit clock (BCLK), which ticks once per audio bit.": "비트 클럭(BCLK)을 전달하는 GPIO입니다. 오디오 비트마다 한 번씩 틱합니다.",
+    "Lrclk Pin": "LRCLK 핀",
+    "GPIO carrying the word select line (LRCLK or WS), which marks left and right samples. Some boards label it LRC.": "워드 선택 라인(LRCLK 또는 WS)을 전달하는 GPIO로, 왼쪽과 오른쪽 샘플을 구분합니다. LRC로 표기한 보드도 있습니다.",
+    "Din Pin": "DIN 핀",
+    "GPIO carrying the audio data into the amplifier (DIN). This is the one sound actually travels on.": "앰프로 오디오 데이터를 보내는 GPIO(DIN)입니다. 실제로 소리가 전달되는 라인입니다.",
+    "Sample Rate": "샘플 레이트",
+    "Samples per second. 16 kHz is plenty for speech and effects and cheap on memory; 44100 is CD rate and costs nearly three times the bandwidth.": "초당 샘플 수입니다. 16 kHz는 음성과 효과음에 충분하고 메모리도 적게 듭니다. 44100은 CD 레이트이며 대역폭이 거의 세 배 듭니다.",
+    "Channels": "채널 수",
+    "1 for mono, 2 for stereo. The MAX98357 is a mono amplifier, so stereo material is mixed down unless a second one is wired for the other channel.": "1은 모노, 2는 스테레오입니다. MAX98357은 모노 앰프이므로, 다른 채널용으로 두 번째 앰프를 연결하지 않으면 스테레오 소리는 모노로 합쳐집니다.",
+    "Initial Volume": "초기 볼륨",
+    "Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet rather than at full output.": "시작 시 볼륨(0~100)입니다. 첫 소리가 재생되기 전에 적용되므로, 프로젝트가 최대 출력이 아닌 작은 소리로 시작할 수 있습니다."
+}
