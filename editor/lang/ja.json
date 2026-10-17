@@ -14,5 +14,7 @@
     "Channels": "チャンネル数",
     "1 for mono, 2 for stereo. The MAX98357 is a mono amplifier, so stereo material is mixed down unless a second one is wired for the other channel.": "1 はモノラル、2 はステレオです。MAX98357 はモノラルのアンプなので、もう一方のチャンネル用に 2 つ目をつながない限り、ステレオの音はモノラルにまとめられます。",
     "Initial Volume": "初期音量",
-    "Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet rather than at full output.": "起動時の音量 (0 から 100) です。最初の音が鳴る前に適用されるので、最大音量ではなく小さな音で始めることができます。"
+    "Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet rather than at full output.": "起動時の音量 (0 から 100) です。最初の音が鳴る前に適用されるので、最大音量ではなく小さな音で始めることができます。",
+    "Plays sound through a MAX98357A I2S amplifier.": "MAX98357A I2S アンプで音を再生します。",
+    "Sensors": "センサー"
 }

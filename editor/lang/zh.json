@@ -14,5 +14,7 @@
     "Channels": "声道数",
     "1 for mono, 2 for stereo. The MAX98357 is a mono amplifier, so stereo material is mixed down unless a second one is wired for the other channel.": "1 为单声道，2 为立体声。MAX98357 是单声道功放，因此除非为另一个声道再接一片，否则立体声素材会被混合为单声道。",
     "Initial Volume": "初始音量",
-    "Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet rather than at full output.": "启动时的音量，范围 0 到 100。在第一个声音播放前生效，因此项目可以以较小音量启动，而不是满音量输出。"
+    "Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet rather than at full output.": "启动时的音量，范围 0 到 100。在第一个声音播放前生效，因此项目可以以较小音量启动，而不是满音量输出。",
+    "Plays sound through a MAX98357A I2S amplifier.": "通过 MAX98357A I2S 功放播放声音。",
+    "Sensors": "传感器"
 }
