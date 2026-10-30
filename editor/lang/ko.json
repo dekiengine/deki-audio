@@ -1,7 +1,7 @@
 {
     "Audio": "오디오",
     "MAX98357 Audio Component": "MAX98357 오디오 컴포넌트",
-    "I 2s Port": "I2S 포트",
+    "I2S Port": "I2S 포트",
     "Which of the chip's I2S controllers drives the amplifier. Most boards only use one.": "칩의 I2S 컨트롤러 중 어느 것이 앰프를 구동하는지 지정합니다. 대부분의 보드는 하나만 사용합니다.",
     "Bclk Pin": "BCLK 핀",
     "GPIO carrying the bit clock (BCLK), which ticks once per audio bit.": "비트 클럭(BCLK)을 전달하는 GPIO입니다. 오디오 비트마다 한 번씩 틱합니다.",

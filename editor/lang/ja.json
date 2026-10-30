@@ -1,7 +1,7 @@
 {
     "Audio": "オーディオ",
     "MAX98357 Audio Component": "MAX98357 オーディオコンポーネント",
-    "I 2s Port": "I2S ポート",
+    "I2S Port": "I2S ポート",
     "Which of the chip's I2S controllers drives the amplifier. Most boards only use one.": "チップのどの I2S コントローラーでアンプを駆動するかです。ほとんどのボードは 1 つしか使いません。",
     "Bclk Pin": "BCLK ピン",
     "GPIO carrying the bit clock (BCLK), which ticks once per audio bit.": "ビットクロック (BCLK) を送る GPIO です。オーディオの 1 ビットごとに 1 回刻みます。",

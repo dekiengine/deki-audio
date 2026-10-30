@@ -1,7 +1,7 @@
 {
     "Audio": "音频",
     "MAX98357 Audio Component": "MAX98357 音频组件",
-    "I 2s Port": "I2S 端口",
+    "I2S Port": "I2S 端口",
     "Which of the chip's I2S controllers drives the amplifier. Most boards only use one.": "由芯片的哪个 I2S 控制器驱动功放。大多数开发板只用一个。",
     "Bclk Pin": "BCLK 引脚",
     "GPIO carrying the bit clock (BCLK), which ticks once per audio bit.": "传输位时钟（BCLK）的 GPIO，每个音频位跳变一次。",
