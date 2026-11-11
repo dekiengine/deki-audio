@@ -37,7 +37,8 @@ void MAX98357AudioComponent::Setup(SetupCallback onComplete)
     else
     {
         DEKI_LOG_ERROR("MAX98357AudioComponent: Failed to initialize (BCLK=%d LRCLK=%d DOUT=%d @ %d Hz): %s",
-                       (int)bclkPin, (int)lrclkPin, (int)dinPin, (int)sampleRate, s_Driver->GetLastError());
+                       static_cast<int>(bclkPin), static_cast<int>(lrclkPin), static_cast<int>(dinPin),
+                       static_cast<int>(sampleRate), s_Driver->GetLastError());
     }
 
     if (onComplete)

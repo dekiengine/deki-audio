@@ -20,7 +20,7 @@ void MAX98357Audio::Configure(const Deki::PackageConfig& config)
     m_Channels = config.GetInt("channels", 1);
 
     const int volPct = config.GetInt("initialVolume", 80);
-    m_Volume = (volPct < 0) ? 0.0f : (volPct > 100 ? 1.0f : (float)volPct * 0.01f);
+    m_Volume = (volPct < 0) ? 0.0f : (volPct > 100 ? 1.0f : static_cast<float>(volPct) * 0.01f);
 }
 
 bool MAX98357Audio::Initialize()
@@ -123,7 +123,7 @@ bool MAX98357Audio::PlayPCM(const int16_t* samples, size_t count, int sampleRate
         const size_t n = (count - done < 256) ? count - done : 256;
         for (size_t i = 0; i < n; ++i)
         {
-            int32_t s = (int32_t)((float)samples[done + i] * vol);
+            int32_t s = static_cast<int32_t>(static_cast<float>(samples[done + i]) * vol);
             if (s > 32767)
             {
                 s = 32767;
@@ -132,7 +132,7 @@ bool MAX98357Audio::PlayPCM(const int16_t* samples, size_t count, int sampleRate
             {
                 s = -32768;
             }
-            scaled[i] = (int16_t)s;
+            scaled[i] = static_cast<int16_t>(s);
         }
 
         const uint8_t* ptr = reinterpret_cast<const uint8_t*>(scaled);
@@ -146,7 +146,7 @@ bool MAX98357Audio::PlayPCM(const int16_t* samples, size_t count, int sampleRate
                 return false;
             }
             ptr += w;
-            remaining -= (size_t)w;
+            remaining -= static_cast<size_t>(w);
         }
         done += n;
     }
