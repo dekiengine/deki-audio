@@ -156,12 +156,6 @@ bool DecodeAudioFile(const std::string& path, DecodedAudio& out, std::string& er
     {
         return DecodeOgg(path, out, error);
     }
-    if (ext == ".mp3")
-    {
-        error = "MP3 files cannot be read yet; save it as OGG or WAV";
-        return false;
-    }
-
     std::ifstream in(path, std::ios::binary);
     if (!in)
     {
@@ -169,6 +163,10 @@ bool DecodeAudioFile(const std::string& path, DecodedAudio& out, std::string& er
         return false;
     }
     std::vector<uint8_t> file((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    if (ext == ".mp3")
+    {
+        return DecodeMp3(file, out, error);
+    }
     return DecodeWav(file, out, error);
 }
 
