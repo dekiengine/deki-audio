@@ -21,6 +21,13 @@ alongside one that has them.
 - **Audio Player** component: an audio, volume, pitch, loop, Play On Start,
   and Spatial with a Range for sound that comes from where the object is.
   **Audio Receiver** marks where spatial sound is heard from.
+- **The editor imports `.wav` and `.ogg` files** and converts each for every
+  target as it builds: Automatic gives computers 16-bit PCM at the file's
+  rate, and boards IMA ADPCM at their speaker's rate (the platform's
+  `audioSampleRate` and `audioChannels` options) in mono; audio longer than
+  10 seconds streams. The audio's inspector sets Format, Sample Rate,
+  Channels and Loading for every target or for one, and shows the size each
+  target gets.
 - `DekiAudio::PlayOnce(audio)`, `SetMasterVolume`, `StopAll` and
   `SetAllPaused` for game code.
 
