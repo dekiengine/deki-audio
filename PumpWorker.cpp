@@ -2,7 +2,10 @@
 #include "Mixer.h"
 #include <chrono>
 
-#if defined(ESP_PLATFORM)
+// Tactility apps make threads through the OS, which has no esp_pthread for
+// them (deki-tactility-integration's std::thread).
+#if defined(ESP_PLATFORM) && !defined(DEKI_TACTILITY_TARGET)
+#define DEKI_AUDIO_PIN_THREAD 1
 #include "esp_pthread.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -28,7 +31,7 @@ bool PumpWorker::Start(const char* name, int channels, size_t chunkFrames, Write
     m_Context = context;
     m_Running = true;
 
-#if defined(ESP_PLATFORM)
+#if DEKI_AUDIO_PIN_THREAD
     // Above the game and the display worker, so a busy frame does not starve
     // the speaker, and on the other core. The mixing itself takes little time.
     esp_pthread_cfg_t cfg = esp_pthread_get_default_config();
@@ -41,7 +44,7 @@ bool PumpWorker::Start(const char* name, int channels, size_t chunkFrames, Write
     (void)name;
 #endif
     m_Thread = std::thread([this] { Run(); });
-#if defined(ESP_PLATFORM)
+#if DEKI_AUDIO_PIN_THREAD
     esp_pthread_cfg_t restore = esp_pthread_get_default_config();
     esp_pthread_set_cfg(&restore);
 #endif
