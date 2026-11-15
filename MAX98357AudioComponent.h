@@ -16,7 +16,7 @@ namespace DekiAudio
 /// Wire the GAIN pin to GND for +9 dB (loudest) and SD to VDD for
 /// left-channel mono. These are hardware straps; the component does not
 /// drive them.
-DEKI_CATEGORY("Sensors")
+DEKI_CATEGORY("Audio")
 DEKI_DISPLAY_NAME("MAX98357A Audio")
 DEKI_DESCRIPTION("Plays sound through a MAX98357A I2S amplifier.")
 class MAX98357AudioComponent : public Deki::SetupComponent
@@ -44,11 +44,11 @@ public:
     int32_t dinPin = 5;
 
     DEKI_EXPORT
-    DEKI_TOOLTIP("Samples per second. 16 kHz is plenty for speech and effects and cheap on memory; 44100 is CD rate "
-                 "and costs nearly three times the bandwidth.")
+    DEKI_TOOLTIP("Samples per second the amplifier plays. 22050 suits games and keeps audio small; the editor "
+                 "converts each audio to the target's rate.")
     DEKI_UNIT(Frequency)
     DEKI_RANGE(8000, 48000)
-    int32_t sampleRate = 16000;
+    int32_t sampleRate = 22050;
 
     DEKI_EXPORT
     DEKI_TOOLTIP("1 for mono, 2 for stereo. The MAX98357 is a mono amplifier, so stereo material is mixed down unless "
@@ -56,7 +56,7 @@ public:
     DEKI_RANGE(1, 2)
     int32_t channels = 1;
 
-    /// Software playback volume, 0..100 percent. The amp's hardware gain is fixed.
+    /// The mixer's master volume at startup, 0..100 percent. The amp's hardware gain is fixed.
     DEKI_EXPORT
     DEKI_TOOLTIP("Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet "
                  "rather than at full output.")

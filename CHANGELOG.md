@@ -8,6 +8,33 @@ breaking change bumps the minor across the editor, the engine and every
 package together, so a package with no changes of its own is still released
 alongside one that has them.
 
+## Unreleased
+
+### Added
+- **Audio assets.** An `Audio` asset is a sound the editor compiled for the
+  target (a `.daud` file): 16-bit PCM or IMA ADPCM, in blocks. Short audio is
+  loaded whole; long audio streams from storage a block at a time.
+- **A mixer** (`DekiAudio::Mixer`) plays many audios at once, each with its
+  own volume, pitch, pan and loop, resampled to the output's rate. Outputs
+  pull from it on their own thread or callback; streamed audio is read on the
+  game thread, so the output never waits on storage.
+- **Audio Player** component: an audio, volume, pitch, loop, Play On Start,
+  and Spatial with a Range for sound that comes from where the object is.
+  **Audio Receiver** marks where spatial sound is heard from.
+- `DekiAudio::PlayOnce(audio)`, `SetMasterVolume`, `StopAll` and
+  `SetAllPaused` for game code.
+
+### Changed
+- **`IDekiAudio` is an output now**: `GetSampleRate`, `GetChannels`, `Start`,
+  `Stop` and `IsRunning` replace `PlayPCM`, `SetVolume` and `IsPlaying`. An
+  output becomes the current one with `AudioOutput::SetCurrent`, which
+  replaces `DekiAudio::DekiAudio::SetCurrent`.
+- The MAX98357A driver mixes on its own thread and starts its I2S channel
+  with the first sound. Its setup no longer stops the boot when the amp is
+  missing; the game starts without sound. Its default rate is 22050 Hz.
+- The `max98357` feature requires `deki-i2s`; the package itself requires
+  nothing, so a desktop project gets audio without it.
+
 ## 0.40.0
 
 ### Changed

@@ -1,5 +1,6 @@
 #include "MAX98357AudioComponent.h"
-#include "DekiAudio.h"
+#include "AudioOutput.h"
+#include "Mixer.h"
 #include <deki/PackageConfig.h>
 #include <deki/LogSystem.h>
 #include <string>
@@ -25,25 +26,26 @@ void MAX98357AudioComponent::Setup(SetupCallback onComplete)
     cfg.settings["i2sPort"] = std::to_string(i2sPort);
     cfg.settings["sampleRate"] = std::to_string(sampleRate);
     cfg.settings["channels"] = std::to_string(channels);
-    cfg.settings["initialVolume"] = std::to_string(initialVolume);
-
     s_Driver->Configure(cfg);
 
-    const bool success = s_Driver->Initialize();
-    if (success)
+    const int volume = initialVolume < 0 ? 0 : (initialVolume > 100 ? 100 : static_cast<int>(initialVolume));
+    Mixer::Instance().SetMasterVolume(static_cast<float>(volume) * 0.01f);
+
+    if (s_Driver->Initialize())
     {
-        DekiAudio::SetCurrent(s_Driver);
+        AudioOutput::SetCurrent(s_Driver);
     }
     else
     {
-        DEKI_LOG_ERROR("MAX98357AudioComponent: Failed to initialize (BCLK=%d LRCLK=%d DOUT=%d @ %d Hz): %s",
+        DEKI_LOG_ERROR("MAX98357AudioComponent: no sound (BCLK=%d LRCLK=%d DOUT=%d @ %d Hz): %s",
                        static_cast<int>(bclkPin), static_cast<int>(lrclkPin), static_cast<int>(dinPin),
                        static_cast<int>(sampleRate), s_Driver->GetLastError());
     }
 
+    // A game without sound still starts.
     if (onComplete)
     {
-        onComplete(success);
+        onComplete(true);
     }
 }
 

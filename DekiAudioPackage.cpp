@@ -1,5 +1,6 @@
 // Package entry point for deki-audio.
 #include "DekiAudioPackage.h"
+#include "DekiAudioInit.h"
 #include <deki/interop/Plugin.h>
 #include <deki/LogSystem.h>
 
@@ -45,10 +46,12 @@ extern "C"
     }
     DEKI_PLUGIN_API int DekiPluginInit(void)
     {
+        DekiAudioInitSystem();
         return 0;
     }
     DEKI_PLUGIN_API void DekiPluginShutdown(void)
     {
+        DekiAudioShutdownSystem();
         s_AudioRegistered = false;
     }
     DEKI_PLUGIN_API int DekiPluginGetComponentCount(void)

@@ -1,20 +1,25 @@
 #pragma once
 
 #include "../IDekiAudio.h"
+#include "../PumpWorker.h"
 #include <deki/PackageConfig.h>
-#include "IDekiI2S.h"  // from deki-i2s
 #include <string>
+
+namespace DekiI2s
+{
+class IDekiI2S;
+}
 
 namespace DekiAudio
 {
 
-/// Driver for the MAX98357A class-D mono amp over I2S.
+/// The MAX98357A class-D mono amp over I2S, as an audio output: once started
+/// it mixes on its own thread and writes to the I2S channel, whose DMA paces
+/// it.
 ///
-/// The amp's gain is set in hardware by its GAIN pin resistor, so volume is
-/// applied in software by scaling samples before they go to I2S.
-///
-/// Tie the amp's SD pin to VDD for left-channel mono. It is a hardware
-/// strap; the driver does not drive it.
+/// The amp's gain is set by its GAIN pin, so loudness is the mixer's master
+/// volume. Tie the amp's SD pin to VDD for left-channel mono; it is a hardware
+/// strap the driver does not drive.
 class MAX98357Audio : public IDekiAudio
 {
 public:
@@ -28,29 +33,33 @@ public:
                "S)";
     }
     void Configure(const Deki::PackageConfig& config) override;
+    /// Opens the I2S channel. The channel runs from Start().
     bool Initialize() override;
     void Shutdown() override;
     void Update(float) override {}
     Deki::PackageState GetState() const override { return m_State; }
     const char* GetLastError() const override { return m_LastError.c_str(); }
 
-    bool PlayPCM(const int16_t* samples, size_t count, int sampleRate) override;
+    int GetSampleRate() const override { return m_SampleRate; }
+    int GetChannels() const override { return m_Channels; }
+    bool Start() override;
     void Stop() override;
-    bool IsPlaying() const override { return m_Playing; }
-    void SetVolume(float volume) override;
-    float GetVolume() const override { return m_Volume; }
+    bool IsRunning() const override { return m_Pump.IsRunning(); }
     bool IsHardwareConnected() const override { return m_I2S != nullptr; }
+
+    /// Writes interleaved frames to the channel, blocking until it took them.
+    /// What the pump thread calls; public for tests.
+    bool WriteFrames(const int16_t* samples, size_t frames);
 
 private:
     DekiI2s::IDekiI2S* m_I2S = nullptr;
+    PumpWorker m_Pump;
     int m_Port = 0;
     int m_PinBCLK = -1;
     int m_PinLRCLK = -1;
     int m_PinDOUT = -1;
     int m_SampleRate = 16000;
     int m_Channels = 1;
-    float m_Volume = 0.8f;
-    bool m_Playing = false;
 
     Deki::PackageState m_State = Deki::PackageState::Uninitialized;
     std::string m_LastError;

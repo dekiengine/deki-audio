@@ -1,18 +1,34 @@
 {
   "id": "deki-audio",
-  "displayName": "Audio (Speaker / PCM playback)",
+  "displayName": "Audio",
   "minEngine": "0.40.0",
-  "buildDefine": "DEKI_PACKAGE_AUDIO",
-  "requires": [
-    "deki-i2s"
+  "tags": [
+    "transform_2d"
   ],
+  "buildDefine": "DEKI_PACKAGE_AUDIO",
+  "requires": [],
   "features": [
     {
+      "id": "player",
+      "displayName": "Audio Player",
+      "buildDefine": "DEKI_FEATURE_AUDIO_PLAYER",
+      "defaultEnabled": true,
+      "componentTypes": [
+        "AudioPlayer",
+        "AudioReceiver"
+      ]
+    },
+    {
       "id": "max98357",
-      "displayName": "MAX98357A (I²S class-D mono amp, 16-bit PCM)",
+      "displayName": "MAX98357A (I²S class-D mono amp)",
       "buildDefine": "DEKI_FEATURE_AUDIO_MAX98357",
       "defaultEnabled": true,
-      "componentTypes": []
+      "componentTypes": [
+        "MAX98357AudioComponent"
+      ],
+      "requires": [
+        "deki-i2s"
+      ]
     }
   ],
   "dependencies": {}

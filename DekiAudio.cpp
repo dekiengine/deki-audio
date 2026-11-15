@@ -3,16 +3,32 @@
 namespace DekiAudio
 {
 
-IDekiAudio* DekiAudio::s_Current = nullptr;
-
-void DekiAudio::SetCurrent(IDekiAudio* audio)
+AudioHandle PlayOnce(const Audio* audio, float volume, float pitch)
 {
-    s_Current = audio;
+    PlayOptions options;
+    options.volume = volume;
+    options.pitch = pitch;
+    return Mixer::Instance().Play(audio, options);
 }
 
-IDekiAudio* DekiAudio::GetCurrent()
+void SetMasterVolume(float volume)
 {
-    return s_Current;
+    Mixer::Instance().SetMasterVolume(volume);
+}
+
+float GetMasterVolume()
+{
+    return Mixer::Instance().GetMasterVolume();
+}
+
+void StopAll()
+{
+    Mixer::Instance().StopAll();
+}
+
+void SetAllPaused(bool paused)
+{
+    Mixer::Instance().SetAllPaused(paused);
 }
 
 }  // namespace DekiAudio
