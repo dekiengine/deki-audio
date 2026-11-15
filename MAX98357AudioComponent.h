@@ -61,7 +61,7 @@ public:
     DEKI_TOOLTIP("Volume at startup, 0 to 100. Applies before the first sound plays, so a project can come up quiet "
                  "rather than at full output.")
     DEKI_RANGE(0, 100)
-    int32_t initialVolume = 80;
+    int32_t initialVolume = 10;
 
     MAX98357AudioComponent() = default;
     virtual ~MAX98357AudioComponent() = default;
