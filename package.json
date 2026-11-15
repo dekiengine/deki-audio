@@ -31,5 +31,9 @@
       ]
     }
   ],
-  "dependencies": {}
+  "dependencies": {
+    "espidf": [
+      "pthread"
+    ]
+  }
 }

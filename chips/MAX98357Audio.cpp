@@ -39,14 +39,31 @@ void MAX98357Audio::Configure(const Deki::PackageConfig& config)
 
 bool MAX98357Audio::Initialize()
 {
-    // Closes any open channel, so a second Initialize does not leak it.
     Shutdown();
+    if (!DekiI2s::DekiI2S::HasFactory())
+    {
+        m_LastError = "MAX98357Audio: no I2S factory registered (platform integration missing)";
+        m_State = Deki::PackageState::Error;
+        return false;
+    }
+    // The channel opens with the first sound (Start): its DMA buffers take
+    // internal RAM, which a game without sound keeps.
+    m_State = Deki::PackageState::Running;
+    return true;
+}
 
+void MAX98357Audio::Shutdown()
+{
+    Stop();
+    m_State = Deki::PackageState::Uninitialized;
+}
+
+bool MAX98357Audio::OpenChannel()
+{
     m_I2S = DekiI2s::DekiI2S::Create();
     if (!m_I2S)
     {
         m_LastError = "MAX98357Audio: no I2S factory registered (platform integration missing)";
-        m_State = Deki::PackageState::Error;
         return false;
     }
 
@@ -65,49 +82,49 @@ bool MAX98357Audio::Initialize()
     if (!m_I2S->Initialize())
     {
         m_LastError = std::string("MAX98357Audio: I2S init failed: ") + m_I2S->GetLastError();
-        delete m_I2S;
-        m_I2S = nullptr;
-        m_State = Deki::PackageState::Error;
+        CloseChannel();
         return false;
     }
-
-    m_State = Deki::PackageState::Running;
+    if (!m_I2S->Start())
+    {
+        m_LastError = std::string("MAX98357Audio: I2S start failed: ") + m_I2S->GetLastError();
+        CloseChannel();
+        return false;
+    }
     return true;
 }
 
-void MAX98357Audio::Shutdown()
+void MAX98357Audio::CloseChannel()
 {
-    Stop();
     if (m_I2S)
     {
+        m_I2S->Stop();
         m_I2S->Shutdown();
         delete m_I2S;
         m_I2S = nullptr;
     }
-    m_State = Deki::PackageState::Uninitialized;
 }
 
 bool MAX98357Audio::Start()
 {
-    if (!m_I2S)
+    if (m_State != Deki::PackageState::Running)
     {
-        m_LastError = "MAX98357Audio: no I2S channel";
+        m_LastError = "MAX98357Audio: not set up";
         return false;
     }
     if (m_Pump.IsRunning())
     {
         return true;
     }
-    if (!m_I2S->Start())
+    if (!OpenChannel())
     {
-        m_LastError = std::string("MAX98357Audio: I2S start failed: ") + m_I2S->GetLastError();
         return false;
     }
     auto write = [](void* self, const int16_t* samples, size_t frames)
     { return static_cast<MAX98357Audio*>(self)->WriteFrames(samples, frames); };
     if (!m_Pump.Start("deki_audio", m_Channels, kChunkFrames, write, this))
     {
-        m_I2S->Stop();
+        CloseChannel();
         m_LastError = "MAX98357Audio: no memory or thread for the audio";
         return false;
     }
@@ -116,12 +133,8 @@ bool MAX98357Audio::Start()
 
 void MAX98357Audio::Stop()
 {
-    const bool wasRunning = m_Pump.IsRunning();
     m_Pump.Stop();
-    if (wasRunning && m_I2S)
-    {
-        m_I2S->Stop();
-    }
+    CloseChannel();
 }
 
 bool MAX98357Audio::WriteFrames(const int16_t* samples, size_t frames)

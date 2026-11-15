@@ -203,6 +203,28 @@ protected:
         ASSERT_TRUE(amp.Initialize());
     }
 
+    // Waits until the pump has written at least `samples` samples.
+
+    void WaitForSamples(size_t samples)
+
+    {
+        for (int i = 0; i < 400; ++i)
+
+        {
+            {
+                std::lock_guard<std::mutex> guard(g_Ch.lock);
+
+                if (g_Ch.written.size() >= samples)
+
+                {
+                    return;
+                }
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+    }
+
     MAX98357Audio amp;
 };
 
@@ -212,6 +234,16 @@ TEST_F(MAX98357Test, PassesItsPinsAndFormatToTheChannel)
 
 {
     Open();
+
+    EXPECT_EQ(amp.GetSampleRate(), 22050);
+
+    EXPECT_EQ(amp.GetChannels(), 2);
+
+    EXPECT_TRUE(amp.IsHardwareConnected());
+
+    EXPECT_EQ(amp.GetState(), Deki::PackageState::Running);
+
+    ASSERT_TRUE(amp.Start());
 
     EXPECT_EQ(g_Ch.config.GetPin("BCLK"), 7);
 
@@ -227,29 +259,25 @@ TEST_F(MAX98357Test, PassesItsPinsAndFormatToTheChannel)
 
     EXPECT_EQ(g_Ch.config.GetInt("bits_per_sample"), 16);
 
-    EXPECT_EQ(amp.GetSampleRate(), 22050);
-
-    EXPECT_EQ(amp.GetChannels(), 2);
-
-    EXPECT_TRUE(amp.IsHardwareConnected());
-
-    EXPECT_EQ(amp.GetState(), Deki::PackageState::Running);
+    amp.Stop();
 }
 
-TEST_F(MAX98357Test, TheChannelRunsOnlyWhileTheOutputRuns)
+TEST_F(MAX98357Test, TheChannelIsOpenOnlyWhileTheOutputRuns)
 
 {
-    // A game that plays nothing leaves the amplifier idle.
+    // A game that plays nothing keeps the channel's DMA memory.
 
     Open();
 
-    EXPECT_EQ(g_Ch.starts, 0);
+    EXPECT_EQ(g_Ch.alive, 0);
 
     EXPECT_FALSE(amp.IsRunning());
 
     ASSERT_TRUE(amp.Start());
 
     EXPECT_TRUE(amp.IsRunning());
+
+    EXPECT_EQ(g_Ch.alive, 1);
 
     EXPECT_EQ(g_Ch.starts, 1);
 
@@ -261,35 +289,57 @@ TEST_F(MAX98357Test, TheChannelRunsOnlyWhileTheOutputRuns)
 
     EXPECT_FALSE(amp.IsRunning());
 
+    EXPECT_EQ(g_Ch.alive, 0);
+
     EXPECT_EQ(g_Ch.stops, 1);
 }
 
 TEST_F(MAX98357Test, PartialWritesAreContinued)
 
 {
-    // DMA takes what fits; the driver keeps writing the rest.
+    // DMA takes what fits; the driver writes the rest, so whole chunks of
+
+    // 240 frames arrive.
 
     Open(1);
 
     g_Ch.maxWrite = 6;
 
-    std::vector<int16_t> frames(300, 7);
+    Mixer::Instance().SetOutputFormat(amp.GetSampleRate(), amp.GetChannels());
 
-    ASSERT_TRUE(amp.WriteFrames(frames.data(), frames.size()));
+    ASSERT_TRUE(amp.Start());
 
-    EXPECT_EQ(g_Ch.written, frames);
+    WaitForSamples(480);
+
+    amp.Stop();
+
+    std::lock_guard<std::mutex> guard(g_Ch.lock);
+
+    ASSERT_GE(g_Ch.written.size(), 480u);
+
+    EXPECT_EQ(g_Ch.written.size() % 240, 0u);
 }
 
-TEST_F(MAX98357Test, AFailedWriteIsReported)
+TEST_F(MAX98357Test, AFailingChannelStillStops)
 
 {
+    // Failed writes are retried after a pause; Stop still ends the thread.
+
     Open(1);
 
     g_Ch.writesBeforeFailing = 0;
 
-    std::vector<int16_t> frames(10, 1);
+    Mixer::Instance().SetOutputFormat(amp.GetSampleRate(), amp.GetChannels());
 
-    EXPECT_FALSE(amp.WriteFrames(frames.data(), frames.size()));
+    ASSERT_TRUE(amp.Start());
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+    amp.Stop();
+
+    EXPECT_FALSE(amp.IsRunning());
+
+    EXPECT_TRUE(g_Ch.written.empty());
 }
 
 TEST_F(MAX98357Test, TheMixersSamplesReachTheChannel)
@@ -303,21 +353,7 @@ TEST_F(MAX98357Test, TheMixersSamplesReachTheChannel)
 
     ASSERT_TRUE(amp.Start());
 
-    for (int i = 0; i < 200; ++i)
-
-    {
-        {
-            std::lock_guard<std::mutex> guard(g_Ch.lock);
-
-            if (g_Ch.written.size() >= 480)
-
-            {
-                break;
-            }
-        }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-    }
+    WaitForSamples(480);
 
     amp.Stop();
 
@@ -332,26 +368,32 @@ TEST_F(MAX98357Test, TheMixersSamplesReachTheChannel)
     }
 }
 
-TEST_F(MAX98357Test, StartFailsWithoutAChannel)
+TEST_F(MAX98357Test, SetupFailuresLeaveNoChannelBehind)
 
 {
-    EXPECT_FALSE(amp.Start());
+    EXPECT_FALSE(amp.Start());  // not set up
 
     Open();
+
+    g_Ch.failInitialize = true;
+
+    EXPECT_FALSE(amp.Start());
+
+    EXPECT_FALSE(amp.IsRunning());
+
+    EXPECT_EQ(g_Ch.alive, 0);
+
+    g_Ch.failInitialize = false;
 
     g_Ch.failStart = true;
 
     EXPECT_FALSE(amp.Start());
 
-    EXPECT_FALSE(amp.IsRunning());
-}
+    EXPECT_EQ(g_Ch.alive, 0);
 
-TEST_F(MAX98357Test, SetupFailuresLeaveNoChannelBehind)
+    DekiI2s::DekiI2S::SetFactory(nullptr);
 
-{
     Deki::PackageConfig c;
-
-    g_Ch.failInitialize = true;
 
     amp.Configure(c);
 
@@ -361,23 +403,23 @@ TEST_F(MAX98357Test, SetupFailuresLeaveNoChannelBehind)
 
     EXPECT_FALSE(amp.IsHardwareConnected());
 
-    EXPECT_EQ(g_Ch.alive, 0);
-
-    DekiI2s::DekiI2S::SetFactory(nullptr);
-
-    g_Ch.failInitialize = false;
-
-    EXPECT_FALSE(amp.Initialize());
-
     EXPECT_STRNE(amp.GetLastError(), "");
 }
 
-TEST_F(MAX98357Test, InitializingTwiceDoesNotLeakAChannel)
+TEST_F(MAX98357Test, StartingAgainDoesNotLeakAChannel)
 
 {
     Open();
 
-    Open();
+    ASSERT_TRUE(amp.Start());
+
+    amp.Stop();
+
+    ASSERT_TRUE(amp.Start());
 
     EXPECT_EQ(g_Ch.alive, 1);
+
+    Open();  // Initialize again stops it
+
+    EXPECT_EQ(g_Ch.alive, 0);
 }

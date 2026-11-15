@@ -15,7 +15,8 @@ namespace DekiAudio
 
 /// The MAX98357A class-D mono amp over I2S, as an audio output: once started
 /// it mixes on its own thread and writes to the I2S channel, whose DMA paces
-/// it.
+/// it. The channel is open only while the output runs, from the first sound
+/// to Stop, so a game without sound keeps its DMA buffers' internal RAM.
 ///
 /// The amp's gain is set by its GAIN pin, so loudness is the mixer's master
 /// volume. Tie the amp's SD pin to VDD for left-channel mono; it is a hardware
@@ -33,7 +34,7 @@ public:
                "S)";
     }
     void Configure(const Deki::PackageConfig& config) override;
-    /// Opens the I2S channel. The channel runs from Start().
+    /// Checks that the platform has I2S. The channel opens in Start().
     bool Initialize() override;
     void Shutdown() override;
     void Update(float) override {}
@@ -45,20 +46,23 @@ public:
     bool Start() override;
     void Stop() override;
     bool IsRunning() const override { return m_Pump.IsRunning(); }
-    bool IsHardwareConnected() const override { return m_I2S != nullptr; }
+    bool IsHardwareConnected() const override { return m_State == Deki::PackageState::Running; }
 
     /// Writes interleaved frames to the channel, blocking until it took them.
     /// What the pump thread calls; public for tests.
     bool WriteFrames(const int16_t* samples, size_t frames);
 
 private:
+    bool OpenChannel();
+    void CloseChannel();
+
     DekiI2s::IDekiI2S* m_I2S = nullptr;
     PumpWorker m_Pump;
     int m_Port = 0;
     int m_PinBCLK = -1;
     int m_PinLRCLK = -1;
     int m_PinDOUT = -1;
-    int m_SampleRate = 16000;
+    int m_SampleRate = 22050;
     int m_Channels = 1;
 
     Deki::PackageState m_State = Deki::PackageState::Uninitialized;

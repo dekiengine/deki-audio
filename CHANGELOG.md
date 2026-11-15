@@ -40,8 +40,9 @@ alongside one that has them.
   `Stop` and `IsRunning` replace `PlayPCM`, `SetVolume` and `IsPlaying`. An
   output becomes the current one with `AudioOutput::SetCurrent`, which
   replaces `DekiAudio::DekiAudio::SetCurrent`.
-- The MAX98357A driver mixes on its own thread and starts its I2S channel
-  with the first sound. Its setup no longer stops the boot when the amp is
+- The MAX98357A driver mixes on its own thread, on the core the game is not
+  on, and opens its I2S channel with the first sound, so a game that plays
+  none keeps the channel's DMA memory. Its setup no longer stops the boot when the amp is
   missing; the game starts without sound. Its default rate is 22050 Hz.
 - The `max98357` feature requires `deki-i2s`; the package itself requires
   nothing, so a desktop project gets audio without it.
