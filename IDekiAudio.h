@@ -27,6 +27,14 @@ public:
     virtual bool IsRunning() const = 0;
 
     virtual bool IsHardwareConnected() const = 0;
+
+    /// True when the device has its own volume, as a phone does. The game's
+    /// volume is then the device's: DekiAudio::SetMasterVolume moves it, and
+    /// the mixer plays at full.
+    virtual bool HasDeviceVolume() const { return false; }
+    /// The device's volume, 0..1.
+    virtual float GetDeviceVolume() const { return 1.0f; }
+    virtual void SetDeviceVolume(float) {}
 };
 
 }  // namespace DekiAudio

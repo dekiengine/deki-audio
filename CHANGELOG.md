@@ -34,6 +34,10 @@ alongside one that has them.
   mono and joint stereo, 32 to 320 kbit/s).
 - `DekiAudio::PlayOnce(audio)`, `SetMasterVolume`, `StopAll` and
   `SetAllPaused` for game code.
+- **Device volume.** An output whose device has its own volume, as a phone
+  does, says so with `HasDeviceVolume`. `SetMasterVolume` and
+  `GetMasterVolume` are then that volume, and the mixer plays at full, so the
+  game and the device show the same level. Tactility is the first.
 
 ### Changed
 - **`IDekiAudio` is an output now**: `GetSampleRate`, `GetChannels`, `Start`,

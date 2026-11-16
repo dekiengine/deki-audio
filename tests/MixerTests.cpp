@@ -6,7 +6,9 @@
 
 #include "Audio.h"
 #include "AudioFile.h"
+#include "AudioOutput.h"
 #include "DekiAudio.h"
+#include "IDekiAudio.h"
 #include "ImaAdpcm.h"
 #include "Mixer.h"
 #include <deki/providers/FileSystem.h>
@@ -275,6 +277,52 @@ TEST_F(MixerTest, VolumeAndMasterVolumeScale)
     EXPECT_NEAR(Render(1, 1)[0], 5000, 1);
     Mixer::Instance().SetMasterVolume(0.5f);
     EXPECT_NEAR(Render(1, 1)[0], 2500, 1);
+}
+
+// An output whose device has its own volume, as Tactility's does.
+class DeviceVolumeOutput : public IDekiAudio
+{
+public:
+    float deviceVolume = 0.4f;
+
+    const char* GetPackageId() const override { return "audio"; }
+    const char* GetPackageName() const override { return "Device Volume Output"; }
+    void Configure(const Deki::PackageConfig&) override {}
+    bool Initialize() override { return true; }
+    void Shutdown() override {}
+    void Update(float) override {}
+    Deki::PackageState GetState() const override { return Deki::PackageState::Running; }
+    const char* GetLastError() const override { return ""; }
+    int GetSampleRate() const override { return 22050; }
+    int GetChannels() const override { return 1; }
+    bool Start() override { return true; }
+    void Stop() override {}
+    bool IsRunning() const override { return true; }
+    bool IsHardwareConnected() const override { return true; }
+    bool HasDeviceVolume() const override { return true; }
+    float GetDeviceVolume() const override { return deviceVolume; }
+    void SetDeviceVolume(float volume) override { deviceVolume = volume; }
+};
+
+TEST_F(MixerTest, TheMasterVolumeIsTheDevicesWhenItHasOne)
+{
+    DeviceVolumeOutput output;
+    AudioOutput::SetCurrent(&output);
+    EXPECT_FLOAT_EQ(GetMasterVolume(), 0.4f);
+
+    SetMasterVolume(0.7f);
+    EXPECT_FLOAT_EQ(output.deviceVolume, 0.7f);
+    EXPECT_FLOAT_EQ(GetMasterVolume(), 0.7f);
+    // The mixer plays at full; the device scales it.
+    EXPECT_FLOAT_EQ(Mixer::Instance().GetMasterVolume(), 1.0f);
+    SetMasterVolume(3.0f);
+    EXPECT_FLOAT_EQ(output.deviceVolume, 1.0f);
+
+    // Without such an output, the mixer has the volume.
+    AudioOutput::SetCurrent(nullptr);
+    SetMasterVolume(0.25f);
+    EXPECT_FLOAT_EQ(Mixer::Instance().GetMasterVolume(), 0.25f);
+    EXPECT_FLOAT_EQ(output.deviceVolume, 1.0f);
 }
 
 TEST_F(MixerTest, PanMovesAMonoAudioBetweenTheChannels)
